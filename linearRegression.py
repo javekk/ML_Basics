@@ -9,15 +9,15 @@ def coef_estimation(x, y):
     mean_x, mean_y = np.mean(x), np.mean(y)
     cross_xy = np.sum(y * x) - (n * mean_y * mean_x) # cross deviation
     cross_xx = np.sum(x * x) - (n * mean_x * mean_x) # x deviation
-    b_1 = cross_xy / cross_xx # reg coef  = slope
-    b_0 = mean_y - (b_1*mean_x) # = intercept
+    b_1 = cross_xy / cross_xx # slope
+    b_0 = mean_y - (b_1*mean_x) # intercept
     return (b_0, b_1)
 
 
 def plot_regression_line(x,y,b):
-    plt.scatter(x,y, color= "r", marker= "o", s = 20) #plot points
-    y_pred = b[0] + b[1]*x #predicting response vector
-    plt.plot(x, y_pred, color = "g") #plot regression line
+    plt.scatter(x,y, color= "g", marker= "o", s = 30) #plot points
+    y_pred = b[0] + b[1]*x #predict response vector
+    plt.plot(x, y_pred, color = "b") #plot regression line
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
