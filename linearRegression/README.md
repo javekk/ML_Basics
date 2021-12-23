@@ -13,6 +13,6 @@ example:
 
 > RegressionDiabetes.py
 
-Same approach as before, but using sklearn diabetes dataset and LR modelm usage:
+Same approach as before, but using sklearn diabetes dataset and LR model. Usage:
 
     python linearRegressionDiabetes.py
