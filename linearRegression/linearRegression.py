@@ -23,7 +23,7 @@ def plot_regression_line(x,y,b):
     plt.show()
 
 
-def readData(filePath):
+def read_data(filePath):
     with open(filePath, 'r') as f:
         reader = csv.reader(f, delimiter=',')
         headers = next(reader, None)
@@ -35,8 +35,7 @@ def main():
     if len(sys.argv) != 2:
         print('Please specify (only) one argument i.e. the csv file')
         sys.exit()
-
-    x, y = readData(sys.argv[1])
+    x, y = read_data(sys.argv[1])
     b = coef_estimation(x,y)
     print("b_0 = {}\nb_1 = {}".format(b[0], b[1]))
     print("Best fitting line: Y = {:.2f} + {:.2f}X".format(b[0], b[1]))

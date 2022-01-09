@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy.lib.shape_base import split
 from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 
@@ -13,7 +12,7 @@ def plot_regression_line(X_test, y_test, y_pred):
     plt.show()
 
 
-def readData():
+def processData():
     # https://github.com/scikit-learn/scikit-learn/blob/0d378913b/sklearn/datasets/_base.py#L911
     diabetes_ds = datasets.load_diabetes()
     X = diabetes_ds.data[:, 2, np.newaxis] # using one feature
@@ -27,7 +26,7 @@ def readData():
 
 
 def main():
-    X_train, y_train, X_test, y_test = readData()
+    X_train, y_train, X_test, y_test = processData()
     model = linear_model.LinearRegression() # Get Model
     model.fit(X_train, y_train) # Train
     y_pred = model.predict(X_test)
