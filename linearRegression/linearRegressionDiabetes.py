@@ -5,7 +5,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 
 def plot_regression_line(X_test, y_test, y_pred):
-    plt.scatter(X_test, y_test, color= "g", marker= "o", s = 30) #plot points
+    plt.scatter(X_test, y_test, color= "g", marker= "o") #plot points
     plt.plot(X_test, y_pred, color = "b") #plot regression line
     plt.xlabel('x')
     plt.ylabel('y')
