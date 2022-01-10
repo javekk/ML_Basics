@@ -1,5 +1,6 @@
 # Linear Regression
 
+
 > linearRegression.py
 
 Generate the best fitting line and plot it; usage:
@@ -27,3 +28,17 @@ example:
 Same approach as before, but with sklearn diabetes dataset; usage:
 
     python linearRegressionDiabetes.py
+
+
+> multipleLinearRegression.py
+
+Similar to the previous one, but with more than one feature; usage:
+
+    python multipleLinearRegression.py
+
+
+# Bibliography 
+
+* [EXPLAINED GAUSS-MARKOV PROOF: ORDINARYLEAST SQUARES AND B.L.U.E](http://www.unm.edu/~jikaczmarski/working_papers/gm_proof.pdf)
+* [Wikipedia - Simple Liner Regression](https://en.wikipedia.org/wiki/Simple_linear_regression)
+* [geeksforgeeks.org - Linear Regression (Python Implementation)](https://www.geeksforgeeks.org/linear-regression-python-implementation/) 
