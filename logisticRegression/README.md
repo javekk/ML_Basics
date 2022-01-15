@@ -3,7 +3,7 @@
 
 > logisticRegression.py
 
-Predict the breast cancer being *benign* or *malignant*, based on the [UCI Machine Learning Repository - Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29). Usage:
+Predict breast cancer being *benign* or *malignant*, based on the [UCI Machine Learning Repository - Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29). Usage:
 
     $ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
 
