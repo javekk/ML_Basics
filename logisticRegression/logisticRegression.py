@@ -74,14 +74,6 @@ def plot_cost_trend(J):
     plt.show()
 
 
-def plot_cost_trend(J):
-    plt.scatter(range(0, len(J)), J, color= "g", marker= "o", s = 3)
-    plt.title('Cost evelution')
-    plt.xlabel('No. Epochs')
-    plt.ylabel('Cost')
-    plt.show()
-
-
 def plot_decision_boundary(y_pred_cont, y_test, bound):
     fig = plt.figure()
     ax = fig.add_subplot(111)
