@@ -73,6 +73,7 @@ def plot_cost_trend(J):
     plt.ylabel('Cost')
     plt.show()
 
+
 def plot_cost_trend(J):
     plt.scatter(range(0, len(J)), J, color= "g", marker= "o", s = 3)
     plt.title('Cost evelution')
@@ -81,6 +82,20 @@ def plot_cost_trend(J):
     plt.show()
 
 
+def plot_decision_boundary(y_pred_cont, y_test, bound):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    t = list(zip(y_pred_cont, y_test))
+    benign = [ti[0] for ti in t if ti[1] == 0]
+    malignant = [ti[0] for ti in t if ti[1] == 1]
+    ax.scatter([i for i in range(len(benign))], benign, s=25, c='b', marker="o", label='benign')
+    ax.scatter([i for i in range(len(malignant))], malignant, s=25, c='r', marker="s", label='malignant')
+    plt.legend(loc='upper right');
+    ax.set_title("Predicitions")
+    ax.set_xlabel('m')
+    ax.set_ylabel('Probability')
+    plt.axhline(bound, color='black')
+    plt.show()
 
 
 def compute_accuracy(y_test, y_pred):
@@ -106,7 +121,9 @@ def main():
     # Make predictions
     y_pred_cont = predict(X_test, weights)
     y_pred = np.where(y_pred_cont >= bound , 1, 0) 
+    #plot some cool graph
     compute_accuracy(y_test, y_pred)
+    plot_decision_boundary(y_pred_cont, y_test, bound)
 
 
 if __name__ == "__main__":
