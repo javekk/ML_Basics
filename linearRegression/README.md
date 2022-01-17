@@ -3,13 +3,15 @@
 
 > linearRegression.py
 
-Generate the best fitting line and plot it; usage:
+Given a binary dataset x/y,  generate the best fitting line and plot it using `numpy` only; usage:
 
     python linearRegression.py <pathToFile>
 
 example:
 
     python linearRegression.py ../data/weight_height_ratio.csv
+
+
 
 
 > linearRegressionExtLib.py
@@ -23,11 +25,15 @@ example:
     python linearRegressionExtLib.py ../data/weight_height_ratio.csv
 
 
+
+
 > linearRegressionDiabetes.py
 
 Same approach as before, but with sklearn diabetes dataset; usage:
 
     python linearRegressionDiabetes.py
+
+
 
 
 > multipleLinearRegression.py
