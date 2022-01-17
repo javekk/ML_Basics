@@ -8,7 +8,6 @@ Predict breast cancer being *benign* or *malignant*, based on the [UCI Machine L
     $ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
 
 
-
 # Bibliography 
 
 * [ UCI Machine Learning Repository - Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29)
@@ -18,4 +17,3 @@ Predict breast cancer being *benign* or *malignant*, based on the [UCI Machine L
 * [ Towardsdatascience - A Complete Logistic Regression Algorithm From Scratch in Python: Step by Step](https://towardsdatascience.com/a-complete-logistic-regression-algorithm-from-scratch-in-python-step-by-step-ce33eae7d703)
 
 * [ Stackexchange - Derivative of sigmoid function ](https://math.stackexchange.com/questions/78575/derivative-of-sigmoid-function-sigma-x-frac11e-x)
-
