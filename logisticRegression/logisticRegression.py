@@ -90,11 +90,43 @@ def plot_decision_boundary(y_pred_cont, y_test, bound):
     plt.show()
 
 
-def compute_accuracy(y_test, y_pred):
-    acc = np.sum([y_test[i] == y_pred[i] for i in range(len(y_test))])/len(y_test)
-    print('--------')
-    print("Accuracy on test set: ", acc)
-    print('--------')
+def print_confusion_matrix(tp, tn, fp, fn):
+    s = f'''  
+Confusion Matrix:
+
+    _____|____actual_____
+         | {tp}      {fp}
+    pred |
+         | {fn}       {tn}
+    '''
+    print(s)
+
+
+def eval_model(y_test, y_pred):
+    str_sep = '--------\n'
+    compare = list(zip(y_test, y_pred)) # Actual vs Predicted
+    tp = sum(True for i in compare if i[0]==1 and i[1]==1) # true_positives (being malignant and pred malignant)
+    tn = sum(True for i in compare if i[0]==0 and i[1]==0) # true_negatives (being benign and pred benign)
+    fp = sum(True for i in compare if i[0]==0 and i[1]==1) # false_positives (being benign and pred malignant)
+    fn = sum(True for i in compare if i[0]==1 and i[1]==0) # false_negatives (being malignant and pred benign)
+    print(str_sep)
+    print_confusion_matrix(tp, tn, fp, fn)
+    # Accuracy
+    # acc = np.sum([y_test[i] == y_pred[i] for i in range(len(y_test))])/len(y_test)
+    acc = (tp+tn) / (tp+fp+tn+fn)
+    print(str_sep, 'Accuracy:\t', acc)
+    # Precision
+    prec = tp / (tp + fp)
+    print(str_sep, 'Precision:\t', prec)
+    # Recall aka Sensitivity
+    rec = tp / (tp + fn)
+    print(str_sep, 'Recall:\t', rec)
+    # Specificity
+    spec = tn / (tn + fp)
+    print(str_sep, 'Specifity:\t', spec)
+    # F1-score
+    f1 = 2 + ( prec * rec ) / (prec + rec)
+    print(str_sep, 'F1- Score:\t', f1)
 
 
 def main():
@@ -114,7 +146,7 @@ def main():
     y_pred_cont = predict(X_test, weights)
     y_pred = np.where(y_pred_cont >= bound , 1, 0) 
     #plot some cool graph
-    compute_accuracy(y_test, y_pred)
+    eval_model(y_test, y_pred)
     plot_decision_boundary(y_pred_cont, y_test, bound)
 
 
