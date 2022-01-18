@@ -1,11 +1,28 @@
 # Logistic Regression
 
 
+
+
 > logisticRegression.py
 
 Predict breast cancer being *benign* or *malignant*, based on the [UCI Machine Learning Repository - Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29). Implemented using `Numpy` only. Usage:
 
-    $ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
+```bash
+$ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
+```
+
+
+
+> logisticRegressionExtLib.py
+
+Similar to the previous implementation, but using the [scikit learn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) library. Implemented using `Numpy` only. Usage:
+
+```bash
+$ python logisticRegressionExtLib.py ../data/breast-cancer-wisconsin.csv
+```
+
+
+
 
 
 # Bibliography 
