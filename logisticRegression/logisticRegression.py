@@ -74,10 +74,10 @@ def plot_cost_trend(J):
     plt.show()
 
 
-def plot_decision_boundary(y_pred_cont, y_test, bound):
+def plot_decision_boundary(y_pred_prob, y_test, bound):
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    t = list(zip(y_pred_cont, y_test))
+    t = list(zip(y_pred_prob, y_test))
     benign = [ti[0] for ti in t if ti[1] == 0]
     malignant = [ti[0] for ti in t if ti[1] == 1]
     ax.scatter([i for i in range(len(benign))], benign, s=25, c='b', marker="o", label='benign')
@@ -125,7 +125,7 @@ def eval_model(y_test, y_pred):
     spec = tn / (tn + fp)
     print(str_sep, 'Specifity:\t', spec)
     # F1-score
-    f1 = 2 + ( prec * rec ) / (prec + rec)
+    f1 = 2 * ( prec * rec ) / (prec + rec)
     print(str_sep, 'F1- Score:\t', f1)
 
 
@@ -143,11 +143,11 @@ def main():
     J, weights = train(X_train, y_train, weights, learing_rate, epochs) # J = cost
     plot_cost_trend(J)
     # Make predictions
-    y_pred_cont = predict(X_test, weights)
-    y_pred = np.where(y_pred_cont >= bound , 1, 0) 
+    y_pred_prob = predict(X_test, weights)
+    y_pred = np.where(y_pred_prob >= bound , 1, 0) 
     #plot some cool graph
     eval_model(y_test, y_pred)
-    plot_decision_boundary(y_pred_cont, y_test, bound)
+    plot_decision_boundary(y_pred_prob, y_test, bound)
 
 
 if __name__ == "__main__":
