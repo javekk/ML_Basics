@@ -1,15 +1,21 @@
 # Linear Regression
 
 
+
+
 > linearRegression.py
 
 Given a binary dataset x/y,  generate the best fitting line and plot it using `numpy` only; usage:
 
-    python linearRegression.py <pathToFile>
+```bash
+$ python linearRegression.py <pathToFile>
+```
 
 example:
 
-    python linearRegression.py ../data/weight_height_ratio.csv
+```bash
+$ python linearRegression.py ../data/weight_height_ratio.csv
+```
 
 
 
@@ -18,11 +24,15 @@ example:
 
 Predict using sklearn LR model; usage:
 
-    python linearRegressionExtLib.py <pathToFile>
+```bash
+$ python linearRegressionExtLib.py <pathToFile>
+```
 
-example:
+example:		
 
-    python linearRegressionExtLib.py ../data/weight_height_ratio.csv
+```bash
+$ python linearRegressionExtLib.py ../data/weight_height_ratio.csv
+```
 
 
 
@@ -31,7 +41,9 @@ example:
 
 Same approach as before, but with sklearn diabetes dataset; usage:
 
-    python linearRegressionDiabetes.py
+```bash
+$ python linearRegressionDiabetes.py
+```
 
 
 
@@ -40,7 +52,9 @@ Same approach as before, but with sklearn diabetes dataset; usage:
 
 Similar to the previous one, but with more than one feature; usage:
 
-    python multipleLinearRegression.py
+```bash
+$ python multipleLinearRegression.py
+```
 
 
 # Bibliography 
