@@ -15,7 +15,7 @@ $ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
 
 > logisticRegressionExtLib.py
 
-Similar to the previous implementation, but using the [scikit learn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) library. Implemented using `Numpy` only. Usage:
+Similar to the previous implementation, but using the [scikit learn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) library. Usage:
 
 ```bash
 $ python logisticRegressionExtLib.py ../data/breast-cancer-wisconsin.csv
