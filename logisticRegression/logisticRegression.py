@@ -74,7 +74,7 @@ def plot_cost_trend(J):
     plt.show()
 
 
-def plot_decision_boundary(y_pred_prob, y_test, bound):
+def plot_decision_boundary(y_pred_prob, y_test, threshold):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     t = list(zip(y_pred_prob, y_test))
@@ -86,7 +86,7 @@ def plot_decision_boundary(y_pred_prob, y_test, bound):
     ax.set_title("Predicitions")
     ax.set_xlabel('m')
     ax.set_ylabel('Probability')
-    plt.axhline(bound, color='black')
+    plt.axhline(threshold, color='black')
     plt.show()
 
 
@@ -97,7 +97,7 @@ Confusion Matrix:
     _____|____actual_____
          | {tp}      {fp}
     pred |
-         | {fn}       {tn}
+         | {fn}      {tn}
     '''
     print(s)
 
@@ -139,15 +139,15 @@ def main():
     weights = np.random.rand(len(X_train[0])) 
     learing_rate = 0.001
     epochs = 20000
-    bound = 0.5
+    threshold = 0.5
     J, weights = train(X_train, y_train, weights, learing_rate, epochs) # J = cost
     plot_cost_trend(J)
     # Make predictions
     y_pred_prob = predict(X_test, weights)
-    y_pred = np.where(y_pred_prob >= bound , 1, 0) 
+    y_pred = np.where(y_pred_prob >= threshold , 1, 0) 
     #plot some cool graph
     eval_model(y_test, y_pred)
-    plot_decision_boundary(y_pred_prob, y_test, bound)
+    plot_decision_boundary(y_pred_prob, y_test, threshold)
 
 
 if __name__ == "__main__":

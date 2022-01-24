@@ -47,7 +47,6 @@ def plot_decision_boundary(y_pred_cont, y_test):
     plt.show()
 
 
-
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
     print(str_sep, 'Confusion Matrix:\n', confusion_matrix(y_test, y_pred))
