@@ -130,11 +130,11 @@ def eval_model(y_test, y_pred):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print('Please specify (only) one argument i.e. the Breast Cancer Wisconsin csv file')
-        sys.exit()
+    data_path = '../data/breast-cancer-wisconsin.csv'
+    if len(sys.argv) == 2:
+        data_path = sys.argv[1]
     # Data processing
-    X_train, y_train, X_test, y_test = data_preprocessing(read_data(sys.argv[1]))
+    X_train, y_train, X_test, y_test = data_preprocessing(read_data(data_path))
     # Hyperparameters
     weights = np.random.rand(len(X_train[0])) 
     learing_rate = 0.001

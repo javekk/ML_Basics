@@ -8,8 +8,17 @@
 Predict breast cancer being *benign* or *malignant*, based on the [UCI Machine Learning Repository - Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29). Implemented using `Numpy` only. Usage:
 
 ```bash
+$ python logisticRegression.py
+```
+
+it is possible also to specify the path of the dataset:
+
+```bash
 $ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
 ```
+
+
+
 
 
 
@@ -18,10 +27,10 @@ $ python logisticRegression.py ../data/breast-cancer-wisconsin.csv
 Similar to the previous implementation, but using the [scikit learn](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) library. Usage:
 
 ```bash
-$ python logisticRegressionExtLib.py ../data/breast-cancer-wisconsin.csv
+$ python logisticRegressionExtLib.py 
 ```
 
-
+also here it is possible to specify a different path.
 
 
 
