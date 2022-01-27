@@ -2,56 +2,58 @@ import numpy as np
 import sys
 import csv
 import matplotlib.pyplot as plt
+from sklearn import preprocessing
 
 
-def sigmoid(z): 
-    return 1 / (1 + np.exp(-z)) - 0.00000001
+def one_hot_encoding(Y):
+    m = len(Y)
+    no_class = len(np.unique(Y))
+    oneHot = np.zeros(shape=(m,no_class))
+    for i in range(0, m):
+        oneHot[i, Y[i]-1] = 1
+    return oneHot
+
+
+def softmax(Z):
+    soft = (np.exp(Z).T / np.sum(np.exp(Z),axis=1)).T 
+    return soft
 
 
 def predict(X, weights):
-    z = np.dot(weights, X.T)
-    return sigmoid(z)
+    Z = - ( X @ weights )
+    P = softmax(Z)
+    return np.argmax(P,axis=1)
 
 
-def cost(X, y, weights):
-    y_pred = predict(X, weights)
-    # Cross Entropy
-    m = len(X) # number of samples
-    class_cost_y1 = y * np.log(y_pred) # function for y = 1 
-    class_cost_y0 = (1 - y) * np.log(1 - y_pred) # function for y = 0
-    return -(1 / m) * np.sum(class_cost_y1 + class_cost_y0)
+def cost(X, Y_1h, weights):
+    Z = - (X @ weights) 
+    N = X.shape[0]
+    t1 = np.trace(X @ weights @ Y_1h.T)
+    t2 = np.sum(np.log(np.sum(np.exp(Z), axis=1)))
+    loss =  t1 + t2
+    loss = loss / N
+    return loss
 
 
 def update_weights(X, y, weights, learning_rate):
     m = len(X) # number of samples
-    y_pred = predict(X, weights)
-    gradient = np.dot(X.T,  y_pred - y) # compute derivatives
+    Z = - ( X @ weights )
+    y_pred = softmax(Z)
+    gradient = (X.T @ (y - y_pred)) + 2 * weights
     gradient /= m # take the mean
     gradient *= learning_rate
-    weights -= gradient #update weight
+    weights -= gradient #update weights
     return weights
 
-'''
-def gradient_descent(X, y, theta, alpha, epochs):
-    m = len(X)
-    for i in range(0, epochs):
-        for j in range(0, 10):
-            theta = pd.DataFrame(theta)
-            h = hypothesis(theta.iloc[:,j], X)
-            for k in range(0, theta.shape[0]):
-                theta.iloc[k, j] -= (alpha/m) * np.sum((h-y.iloc[:, j])*X.iloc[:, k])
-            theta = pd.DataFrame(theta)
-    return theta, cost
-
-'''
 
 def train(X, y, weights, learning_rate, epochs):
     print("Learning rate: ", learning_rate)
     print("Number of epochs: ", epochs)
-    J = [cost(X, y, weights)] 
+    y_1h = one_hot_encoding(y)
+    J = [cost(X, y_1h, weights)] 
     for i in range(0, epochs):
-        weights = update_weights(X, y, weights, learning_rate)
-        J.append(cost(X, y, weights))
+        weights = update_weights(X, y_1h, weights, learning_rate)
+        J.append(cost(X, y_1h, weights))
         if i % 1000 == 0:
             print("Epoch: ", i, ", Cost: ", J[i])
     return J, weights
@@ -68,12 +70,7 @@ def read_data(filePath):
 def data_preprocessing(data):
     np.random.seed(38) 
     np.random.shuffle(data)
-    m = len(data)
-    t = data[:, 0].astype(int)
-    no_class = len(np.unique(t)) # number of classes aka wine types
-    y = np.zeros(shape=(m,no_class))
-    for i in range(0, m):
-        y[i, t[i]-1] = 1
+    y = data[:, 0].astype(int)
     X = data[:, 1:] #remove y
     # split
     n_split = int( len(data) * .90 ) 
@@ -148,20 +145,23 @@ def eval_model(y_test, y_pred):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print('Please specify (only) one argument i.e. the Wine dataset csv file')
-        sys.exit()
+    data_path = '../data/wine.csv'
+    if len(sys.argv) == 2:
+        data_path = sys.argv[1]
     # Data processing
-    X_train, y_train, X_test, y_test = data_preprocessing(read_data(sys.argv[1]))
+    X_train, y_train, X_test, y_test = data_preprocessing(read_data(data_path))
     # Hyperparameters
+    scaler = preprocessing.StandardScaler().fit(X_train)
+    X_train =scaler.transform(X_train)
 
-    '''
-    weights = np.random.rand(len(X_train[0])) 
+    weights = np.random.rand(X_train.shape[1], len(np.unique(y_test)))
     learing_rate = 0.001
     epochs = 20000
     threshold = 0.5
     J, weights = train(X_train, y_train, weights, learing_rate, epochs) # J = cost
     plot_cost_trend(J)
+
+    '''
     # Make predictions
     y_pred_prob = predict(X_test, weights)
     y_pred = np.where(y_pred_prob >= threshold , 1, 0) 
