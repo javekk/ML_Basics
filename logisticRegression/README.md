@@ -42,6 +42,8 @@ also here it is possible to specify a different path.
 
 * [ ml-cheatsheet - Logistic Regression](https://ml-cheatsheet.readthedocs.io/en/latest/logistic_regression.html)
 
-* [ Towardsdatascience - A Complete Logistic Regression Algorithm From Scratch in Python: Step by Step](https://towardsdatascience.com/a-complete-logistic-regression-algorithm-from-scratch-in-python-step-by-step-ce33eae7d703)
+* [ Towardsdatascience - A Complete Logistic Regression Algorithm From Scratch in Python: Step by Step - Rashida Nasrin Sucky](https://towardsdatascience.com/a-complete-logistic-regression-algorithm-from-scratch-in-python-step-by-step-ce33eae7d703)
+
+* [ Towardsdatascience - Multiclass logistic regression from scratch - Sophia Yang](https://towardsdatascience.com/multiclass-logistic-regression-from-scratch-9cc0007da372)
 
 * [ Stackexchange - Derivative of sigmoid function ](https://math.stackexchange.com/questions/78575/derivative-of-sigmoid-function-sigma-x-frac11e-x)
