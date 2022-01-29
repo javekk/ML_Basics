@@ -46,4 +46,6 @@ also here it is possible to specify a different path.
 
 * [ Towardsdatascience - Multiclass logistic regression from scratch - Sophia Yang](https://towardsdatascience.com/multiclass-logistic-regression-from-scratch-9cc0007da372)
 
+* [Kaggle - Multinomial Logistic Regression from Scratch - VÍTOR GAMA LEMOS](https://www.kaggle.com/vitorgamalemos/multinomial-logistic-regression-from-scratch)
+
 * [ Stackexchange - Derivative of sigmoid function ](https://math.stackexchange.com/questions/78575/derivative-of-sigmoid-function-sigma-x-frac11e-x)

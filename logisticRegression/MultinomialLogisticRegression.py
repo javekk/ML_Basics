@@ -66,12 +66,18 @@ def read_data(filePath):
         data = np.array(list(reader)).astype(float)
         return data
 
+def standardization(X):
+    mean = np.mean(X)
+    std = np.std(X)
+    return (X - mean) / std
+
 
 def data_preprocessing(data):
     np.random.seed(38) 
     np.random.shuffle(data)
     y = data[:, 0].astype(int)
-    X = data[:, 1:] #remove y
+    X = data[:, 1:]
+    X = standardization(X)
     # split
     n_split = int( len(data) * .90 ) 
     X_train = X[:n_split]
@@ -152,7 +158,7 @@ def main():
     X_train, y_train, X_test, y_test = data_preprocessing(read_data(data_path))
     # Hyperparameters
     scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train =scaler.transform(X_train)
+    X_train = scaler.transform(X_train)
 
     weights = np.random.rand(X_train.shape[1], len(np.unique(y_test)))
     learing_rate = 0.001
