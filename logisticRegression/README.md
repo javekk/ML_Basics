@@ -40,6 +40,8 @@ also here it is possible to specify a different path.
 
 * [ UCI Machine Learning Repository - Wine Data Set](https://archive.ics.uci.edu/ml/datasets/wine)
 
+* [ UCI Machine Learning Repository - Wine Quality Data Set](https://archive.ics.uci.edu/ml/datasets/wine+quality)
+
 * [ ml-cheatsheet - Logistic Regression](https://ml-cheatsheet.readthedocs.io/en/latest/logistic_regression.html)
 
 * [ Towardsdatascience - A Complete Logistic Regression Algorithm From Scratch in Python: Step by Step - Rashida Nasrin Sucky](https://towardsdatascience.com/a-complete-logistic-regression-algorithm-from-scratch-in-python-step-by-step-ce33eae7d703)
