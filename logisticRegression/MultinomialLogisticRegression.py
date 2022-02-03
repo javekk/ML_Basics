@@ -10,7 +10,7 @@ def one_hot_encoding(Y):
     no_class = len(np.unique(Y))
     oneHot = np.zeros(shape=(m,no_class))
     for i in range(0, m):
-        oneHot[i, Y[i]-1] = 1
+        oneHot[i, Y[i]-3] = 1 # classes start from 3 (3, 4, 5, 6, 7, 8)
     return oneHot
 
 
@@ -27,11 +27,11 @@ def predict(X, weights):
 
 def cost(X, Y_1h, weights):
     Z = - ( X @ weights ) 
-    N = X.shape[0]
+    m = X.shape[0]
     t1 = np.trace(X @ weights @ Y_1h.T)
     t2 = np.sum(np.log(np.sum(np.exp(Z), axis=1)))
     loss =  t1 + t2
-    loss = loss / N
+    loss = loss / m
     return loss
 
 
@@ -61,7 +61,7 @@ def train(X, y, weights, learning_rate, epochs):
 
 def read_data(filePath):
     with open(filePath, 'r') as f:
-        reader = csv.reader(f, delimiter=',')
+        reader = csv.reader(f, delimiter=';')
         headers = next(reader, None) #remove headers
         data = np.array(list(reader)).astype(float)
         return data
@@ -79,14 +79,17 @@ def normalized(X):
     return (X - min) / (max - min)
 
 
-def data_preprocessing(data):
+def data_preprocessing(data, rescaleType='#'):
     np.random.seed(38) 
     np.random.shuffle(data)
-    y = data[:, 0].astype(int)
-    X = data[:, 1:]
-    X = normalized(X)
+    y = data[:, 11].astype(int)
+    X = data[:, :11] #remove y
+    if rescaleType == 'N':
+        X = normalized(X)
+    elif rescaleType == 'S':
+        X = standardization(X)
     # split
-    n_split = int( len(data) * .80 ) 
+    n_split = int( len(data) * .85 ) 
     X_train = X[:n_split]
     X_test = X[n_split:]
     y_train = y[:n_split]
@@ -128,8 +131,8 @@ Confusion Matrix: TBD
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
     print(str_sep)
-    print(y_pred)
-    print(y_test)
+    print(y_pred[0:20] + 3)
+    print(y_test[0:20])
     '''
     # Accuracy
     print(str_sep, 'Accuracy:\t', "TBD")
@@ -145,7 +148,7 @@ def eval_model(y_test, y_pred):
 
 
 def main():
-    data_path = '../data/wine.csv'
+    data_path = '../data/winequality-red.csv'
     if len(sys.argv) == 2:
         data_path = sys.argv[1]
     # Data processing
@@ -156,7 +159,7 @@ def main():
 
     weights = np.random.rand(X_train.shape[1], len(np.unique(y_test)))
     learing_rate = 0.005
-    epochs = 3000
+    epochs = 10000
     J, weights = train(X_train, y_train, weights, learing_rate, epochs) # J = cost
     plot_cost_trend(J)
     # Make predictions
