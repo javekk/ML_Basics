@@ -10,39 +10,37 @@ def one_hot_encoding(Y):
     no_class = len(np.unique(Y))
     oneHot = np.zeros(shape=(m,no_class))
     for i in range(0, m):
-        oneHot[i, Y[i]-3] = 1 # classes start from 3 (3, 4, 5, 6, 7, 8)
+        oneHot[i, Y[i]-3] = 1 # classes start from 3 (3, 4, 5, 6, 7, 8, 9)
+        #oneHot[i, Y[i]] = 1
     return oneHot
 
 
 def softmax(Z):
-    soft = (np.exp(Z).T / np.sum(np.exp(Z),axis=1)).T 
-    return soft
+    return (np.exp(Z).T / np.sum(np.exp(Z),axis=1)).T 
+
+
+def predict_(X, weights):
+    Z = X @ weights
+    P = softmax(Z)
+    return P
 
 
 def predict(X, weights):
-    Z = - ( X @ weights )
-    P = softmax(Z)
-    return np.argmax(P,axis=1) + 1
+    P = predict_(X, weights)
+    return np.argmax(P,axis=1) 
 
 
 def cost(X, Y_1h, weights):
-    Z = - ( X @ weights ) 
+    P = predict_(X, weights)
     m = X.shape[0]
-    t1 = np.trace(X @ weights @ Y_1h.T)
-    t2 = np.sum(np.log(np.sum(np.exp(Z), axis=1)))
-    loss =  t1 + t2
-    loss = loss / m
-    return loss
+    return - (np.sum( Y_1h * np.log(P))) / m 
+    
 
-
-def update_weights(X, y, weights, learning_rate):
+def update_weights(X, y_1h, weights, learning_rate):
     m = len(X) 
-    Z = - ( X @ weights )
-    y_pred = softmax(Z)
-    gradient = (X.T @ (y - y_pred)) + 2 * weights
-    gradient /= m 
-    gradient *= learning_rate
-    weights -= gradient 
+    P = predict_(X, weights)
+    gradient = - (np.dot( X.T, ( y_1h - P ))) / m   
+    weights -= gradient * learning_rate
     return weights
 
 
@@ -96,6 +94,14 @@ def data_preprocessing(data, rescaleType='#'):
     y_test = y[n_split:]
     return (X_train, y_train, X_test, y_test)
 
+'''
+def data_preprocessing(data, rescaleType='#'):
+    from sklearn.datasets import load_iris
+    from sklearn.model_selection import train_test_split
+    iris_data = load_iris()
+    X_train, X_test, y_train, y_test = train_test_split(iris_data.data, iris_data.target, test_size=0.33, random_state=42)
+    return (X_train, y_train, X_test, y_test)
+'''
 
 def plot_cost_trend(J):
     plt.scatter(range(0, len(J)), J, color= "g", marker= "o", s = 3)
@@ -131,8 +137,8 @@ Confusion Matrix: TBD
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
     print(str_sep)
-    print(y_pred[0:20] + 3)
-    print(y_test[0:20])
+    print(y_pred[0:30] + 4)
+    print(y_test[0:30])
     '''
     # Accuracy
     print(str_sep, 'Accuracy:\t', "TBD")
@@ -152,13 +158,10 @@ def main():
     if len(sys.argv) == 2:
         data_path = sys.argv[1]
     # Data processing
-    X_train, y_train, X_test, y_test = data_preprocessing(read_data(data_path))
+    X_train, y_train, X_test, y_test = data_preprocessing(read_data(data_path), rescaleType='S')
     # Hyperparameters
-    scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train = scaler.transform(X_train)
-
-    weights = np.random.rand(X_train.shape[1], len(np.unique(y_test)))
-    learing_rate = 0.005
+    weights = np.random.rand(X_train.shape[1], len(np.unique(y_train)))
+    learing_rate = 0.01
     epochs = 10000
     J, weights = train(X_train, y_train, weights, learing_rate, epochs) # J = cost
     plot_cost_trend(J)
