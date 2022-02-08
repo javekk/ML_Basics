@@ -2,7 +2,7 @@ import numpy as np
 import sys
 import csv
 import matplotlib.pyplot as plt
-from sklearn import preprocessing
+import seaborn as sns
 
 
 def one_hot_encoding(Y):
@@ -10,8 +10,7 @@ def one_hot_encoding(Y):
     no_class = len(np.unique(Y))
     oneHot = np.zeros(shape=(m,no_class))
     for i in range(0, m):
-        oneHot[i, Y[i]-3] = 1 # classes start from 3 (3, 4, 5, 6, 7, 8, 9)
-        #oneHot[i, Y[i]] = 1
+        oneHot[i, Y[i]-1] = 1 
     return oneHot
 
 
@@ -59,9 +58,10 @@ def train(X, y, weights, learning_rate, epochs):
 
 def read_data(filePath):
     with open(filePath, 'r') as f:
-        reader = csv.reader(f, delimiter=';')
-        headers = next(reader, None) #remove headers
+        reader = csv.reader(f, delimiter=',')
+        headers = next(reader, None)
         data = np.array(list(reader)).astype(float)
+        plotDataDistribution(data, headers)
         return data
 
 
@@ -80,8 +80,8 @@ def normalized(X):
 def data_preprocessing(data, rescaleType='#'):
     np.random.seed(38) 
     np.random.shuffle(data)
-    y = data[:, 11].astype(int)
-    X = data[:, :11] #remove y
+    y = data[:, 0].astype(int)
+    X = data[:, 0:] #remove y
     if rescaleType == 'N':
         X = normalized(X)
     elif rescaleType == 'S':
@@ -94,14 +94,16 @@ def data_preprocessing(data, rescaleType='#'):
     y_test = y[n_split:]
     return (X_train, y_train, X_test, y_test)
 
-'''
-def data_preprocessing(data, rescaleType='#'):
-    from sklearn.datasets import load_iris
-    from sklearn.model_selection import train_test_split
-    iris_data = load_iris()
-    X_train, X_test, y_train, y_test = train_test_split(iris_data.data, iris_data.target, test_size=0.33, random_state=42)
-    return (X_train, y_train, X_test, y_test)
-'''
+
+def plotDataDistribution(data, headers):
+    m = np.sqrt(data.shape[0]).astype(int) + 1
+    fig = plt.figure()
+    for i,_ in enumerate(headers):
+        fig.subplots_adjust(hspace=.4, wspace=.5)
+        ax = fig.add_subplot(m, m, i+1)
+        sns.histplot(data=data, x=data[:,i], ax=ax)
+    plt.show()
+
 
 def plot_cost_trend(J):
     plt.scatter(range(0, len(J)), J, color= "g", marker= "o", s = 3)
@@ -137,7 +139,7 @@ Confusion Matrix: TBD
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
     print(str_sep)
-    print(y_pred[0:30] + 4)
+    print(y_pred[0:30]+1)
     print(y_test[0:30])
     '''
     # Accuracy
