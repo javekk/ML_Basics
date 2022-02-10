@@ -10,7 +10,7 @@ def one_hot_encoding(Y):
     no_class = len(np.unique(Y))
     oneHot = np.zeros(shape=(m,no_class))
     for i in range(0, m):
-        oneHot[i, Y[i]-1] = 1 
+        oneHot[i, Y[i]] = 1 
     return oneHot
 
 
@@ -66,12 +66,14 @@ def read_data(filePath):
 
 
 def standardization(X):
+    # rescales data to have a mean of 0 and standard deviation of 1
     mean = np.mean(X)
     std = np.std(X)
     return (X - mean) / std
 
 
 def normalized(X):
+    # Rescales the values into a range of [0,1] 
     min = np.min(X)
     max = np.max(X)
     return (X - min) / (max - min)
@@ -81,6 +83,7 @@ def data_preprocessing(data, rescaleType='#'):
     np.random.seed(38) 
     np.random.shuffle(data)
     y = data[:, 0].astype(int)
+    y -= 1 
     X = data[:, 0:] #remove y
     if rescaleType == 'N':
         X = normalized(X)
@@ -96,11 +99,11 @@ def data_preprocessing(data, rescaleType='#'):
 
 
 def plotDataDistribution(data, headers):
-    m = np.sqrt(data.shape[0]).astype(int) + 1
+    m = np.sqrt(data.shape[1]).astype(int) + 1
     fig = plt.figure()
     for i,_ in enumerate(headers):
         fig.subplots_adjust(hspace=.4, wspace=.5)
-        ax = fig.add_subplot(m, m, i+1)
+        ax = fig.add_subplot( m, m, i+1)
         sns.histplot(data=data, x=data[:,i], ax=ax)
     plt.show()
 
@@ -113,34 +116,18 @@ def plot_cost_trend(J):
     plt.show()
 
 
-def plot_decision_boundary(y_pred_prob, y_test, threshold):
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    t = list(zip(y_pred_prob, y_test))
-    benign = [ti[0] for ti in t if ti[1] == 0]
-    malignant = [ti[0] for ti in t if ti[1] == 1]
-    ax.scatter([i for i in range(len(benign))], benign, s=25, c='b', marker="o", label='benign')
-    ax.scatter([i for i in range(len(malignant))], malignant, s=25, c='r', marker="s", label='malignant')
-    plt.legend(loc='upper right');
-    ax.set_title("Predicitions")
-    ax.set_xlabel('m')
-    ax.set_ylabel('Probability')
-    plt.axhline(threshold, color='black')
-    plt.show()
-
-
-def print_confusion_matrix(tp, tn, fp, fn):
-    s = f'''  
-Confusion Matrix: TBD
-    '''
-    print(s)
+def print_confusion_matrix(y_test, y_pred):
+    no_class = len(np.unique(y_test))
+    M = np.zeros((no_class,no_class))
+    for i,y in enumerate(y_test):
+        M[y, y_pred[i]] += 1
+    print(M)
 
 
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
-    print(str_sep)
-    print(y_pred[0:30]+1)
-    print(y_test[0:30])
+    print(str_sep, 'Confusion Matrix:\t')
+    print(print_confusion_matrix(y_test, y_pred))
     '''
     # Accuracy
     print(str_sep, 'Accuracy:\t', "TBD")
@@ -169,9 +156,8 @@ def main():
     plot_cost_trend(J)
     # Make predictions
     y_pred = predict(X_test, weights)
-    #plot some cool graph
+    #Eval and plot some cool graph
     eval_model(y_test, y_pred)
-    #plot_decision_boundary(y_pred_prob, y_test, threshold)
 
 
 
