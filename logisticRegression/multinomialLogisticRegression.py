@@ -100,11 +100,13 @@ def data_preprocessing(data, rescaleType='#'):
 
 def plotDataDistribution(data, headers):
     m = np.sqrt(data.shape[1]).astype(int) + 1
-    fig = plt.figure()
-    for i,_ in enumerate(headers):
+    fig = plt.figure(figsize=[10.4, 8.8])
+    for i, col_name in enumerate(headers):
         fig.subplots_adjust(hspace=.4, wspace=.5)
         ax = fig.add_subplot( m, m, i+1)
-        sns.histplot(data=data, x=data[:,i], ax=ax)
+        p = sns.histplot(data=data, x=data[:,i], ax=ax)
+        p.set_xlabel(col_name, fontsize = 10)
+        p.set_ylabel("", fontsize = 10)
     plt.show()
 
 
@@ -124,26 +126,36 @@ def print_confusion_matrix(y_test, y_pred):
     print(M)
 
 
+def plot_accuracy_graph(y_pred_prob, y_test):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    y_pred_prob_vec = [y_pred_prob[i,yi] for i,yi in enumerate(y_test)]  
+    markers_sample = [".", "v", "1"]
+    colors_sample =  ["b", "g", "r"]
+    ax_colors = [colors_sample[i] for i in y_test]
+    ax_y = [i for i in range(len(y_test))]
+    ax.scatter(ax_y, y_pred_prob_vec, s=25, c=ax_colors, marker="o")
+    plt.legend(loc='upper right');
+    ax.set_title("Predicitions")
+    ax.set_xlabel('m')
+    ax.set_ylabel('Probability')
+    plt.show()
+
+
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
     print(str_sep, 'Confusion Matrix:\t')
-    print(print_confusion_matrix(y_test, y_pred))
-    '''
-    # Accuracy
-    print(str_sep, 'Accuracy:\t', "TBD")
-    # Precision
-    print(str_sep, 'Precision:\t', "TBD")
-    # Recall aka Sensitivity
-    print(str_sep, 'Recall:\t', "TBD")
-    # Specificity
-    print(str_sep, 'Specifity:\t', "TBD")
-    # F1-score
-    print(str_sep, 'F1- Score:\t', "TBD")
-    '''
+    # Correct guess percetage
+    m = y_test.shape[0]
+    corrects = sum(y_test == y_pred) / m
+    corr_perc = corrects * 100
+    print(str_sep, 'Perc. of correct guess:\t', corr_perc)
+    # Confusiong Marrix
+    print_confusion_matrix(y_test, y_pred)
 
 
 def main():
-    data_path = '../data/winequality-red.csv'
+    data_path = '../data/wine.csv'
     if len(sys.argv) == 2:
         data_path = sys.argv[1]
     # Data processing
@@ -155,9 +167,11 @@ def main():
     J, weights = train(X_train, y_train, weights, learing_rate, epochs) # J = cost
     plot_cost_trend(J)
     # Make predictions
-    y_pred = predict(X_test, weights)
+    y_pred_prod = predict_(X_test, weights)
+    y_pred = np.argmax(y_pred_prod, axis=1) 
     #Eval and plot some cool graph
     eval_model(y_test, y_pred)
+    plot_accuracy_graph(y_pred_prod, y_test)
 
 
 
