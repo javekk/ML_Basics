@@ -47,7 +47,6 @@ def plot_decision_boundary(y_pred_cont, y_test):
     plt.show()
 
 
-
 def eval_model(y_test, y_pred):
     str_sep = '--------\n'
     print(str_sep, 'Confusion Matrix:\n', confusion_matrix(y_test, y_pred))
@@ -58,11 +57,11 @@ def eval_model(y_test, y_pred):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print('Please specify (only) one argument i.e. the Breast Cancer Wisconsin csv file')
-        sys.exit()
+    data_path = '../data/breast-cancer-wisconsin.csv'
+    if len(sys.argv) == 2:
+        data_path = sys.argv[1]
     # Data processing
-    X_train, X_test, y_train, y_test = data_preprocessing(read_data(sys.argv[1]))
+    X_train, X_test, y_train, y_test = data_preprocessing(read_data((data_path)))
     # Train
     clf = train(X_train, y_train)
     # Make predictions
