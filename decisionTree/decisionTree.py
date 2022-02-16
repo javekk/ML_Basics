@@ -3,6 +3,16 @@ import numpy as np
 import sys
 
 
+
+def gini_impurity(y):
+    P = y.value_counts() / y.shape[0]
+    return 1 - np.sum(P**2)
+
+def entropy(y):
+    P = y.value_counts() / y.shape[0]
+    return - np.sum(P * np.log2(P + 0.00000001))
+    
+
 def data_preprocessing(data, split_threshold = .9):
     data = data.loc[:, 'ClumpThickness':] #remove id
     data.sample(frac=1, random_state=42).reset_index(drop=True)
@@ -16,7 +26,6 @@ def data_preprocessing(data, split_threshold = .9):
     return (X_train, X_test, y_train, y_test )
 
 
-
 def main():
     data_path = '../data/breast-cancer-wisconsin.csv'
     if len(sys.argv) == 2:
@@ -24,6 +33,7 @@ def main():
     # Data processing
     data = pd.read_csv(data_path)
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
+    
     print("PANE")
 
 
