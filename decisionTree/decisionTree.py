@@ -9,35 +9,35 @@ def is_categorical(d):
     return d.dtypes.name == 'category'
 
 
-def gini_impurity(target):
-    P = target.value_counts() / target.shape[0]
+def gini_impurity(y):
+    P = y.value_counts() / y.shape[0]
     return 1 - np.sum(P**2)
 
 
-def entropy(target):
-    P = target.value_counts() / target.shape[0]
+def entropy(y):
+    P = y.value_counts() / y.shape[0]
     return - np.sum(P * np.log2(P + 0.00000001))
     
 
-def variance(target):
-    return target.var() if (len(target) != 1) else 0
+def variance(y):
+    return y.var() if (len(y) != 1) else 0
 
 
-def information_gain(target, mask, func = entropy):   
+def information_gain(y, mask, func = entropy):   
     no_true = sum(mask) 
     no_false = len(mask) - no_true 
     
     perc_true = no_true / (no_true + no_false)
     perc_false = no_false / (no_true + no_false)
 
-    if is_categorical(target):
-        return func(target) - perc_true * func(target[mask]) - perc_false * func(target[-mask])
+    if is_categorical(y):
+        return func(y) - perc_true * func(y[mask]) - perc_false * func(y[-mask])
     else:
-        return variance(target) - (perc_true * variance(target[mask])) - (perc_false * variance(target[-mask]))    
+        return variance(y) - (perc_true * variance(y[mask])) - (perc_false * variance(y[-mask]))    
 
 
-def categorical_options(feature):
-    no_classes = feature.unique()
+def categorical_options(y):
+    no_classes = y.unique()
     split_poss = []
     for i_class in range(0, len(no_classes)+1):
         for subset in itertools.combinations(no_classes, i_class):
@@ -46,7 +46,7 @@ def categorical_options(feature):
     return split_poss[1:-1]
 
 
-def max_information_gain_split(feature, target, func=entropy):
+def max_information_gain_split(feature, y, func=entropy):
 
     is_numerical = False if is_categorical(feature) else True
     
@@ -66,7 +66,7 @@ def max_information_gain_split(feature, target, func=entropy):
 
     for s in options:
         mask = feature < s if is_numerical else feature.isin(s)
-        info_gain = information_gain(target, mask, func)
+        info_gain = information_gain(y, mask, func)
         info_gains.append(info_gain)
         split_values.append(s)
         if info_gain > best_info_gain:
@@ -74,6 +74,26 @@ def max_information_gain_split(feature, target, func=entropy):
             best_split = s
 
     return (best_info_gain, best_split, is_numerical, True)
+
+
+def get_best_split(X, y):
+    masks = X.apply(max_information_gain_split, y = y).T
+    masks.columns = ['info_gain', 'split', 'is_numerical', 'is_usable_as_split' ]
+    # TODO 
+    if sum(masks.loc[3,:]) == 0:
+        return(None, None, None, None)
+    else:
+        masks = masks.loc[:,masks.loc[3,:]]
+
+        # Get the results for split with highest IG
+        split_variable = max(masks)
+        #split_valid = masks[split_variable][]
+        split_value = masks[split_variable][1] 
+        split_ig = masks[split_variable][0]
+        split_numeric = masks[split_variable][2]
+
+        return(split_variable, split_value, split_ig, split_numeric)
+
 
 
 def data_preprocessing(data, split_threshold = .9):
@@ -97,7 +117,7 @@ def main():
     # Data processing
     data = pd.read_csv(data_path)
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
-    max_information_gain_split(X_test['ClumpThickness'], y_test) 
+    get_best_split(X_test, y_test) 
     print("PANE")
 
 
