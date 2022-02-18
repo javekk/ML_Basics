@@ -6,7 +6,7 @@ import itertools
 
 
 def is_categorical(d):
-    return d.dtypes == 'O'
+    return d.dtypes.name == 'category'
 
 
 def gini_impurity(target):
@@ -34,22 +34,6 @@ def information_gain(target, mask, func = entropy):
         return func(target) - perc_true * func(target[mask]) - perc_false * func(target[-mask])
     else:
         return variance(target) - (perc_true * variance(target[mask])) - (perc_false * variance(target[-mask]))    
-
-
-def data_preprocessing(data, split_threshold = .9):
-    data = data.loc[:, 'ClumpThickness':] #remove id
-    data.sample(frac=1, random_state=42).reset_index(drop=True)
-    #y = pd.DataFrame(np.where(data['Class'] == 4 , 1, 0), columns=["Class"]) # benign(2) -> 0, malignant(4) -> 1
-    y = data['Class']
-    y.loc[y==2] = 0
-    y.loc[y==4] = 1
-    X = data.iloc[:, :-1] #remove y
-    n_split = int( data.shape[0] * split_threshold ) 
-    X_train = X.iloc[:n_split]
-    X_test = X.iloc[n_split:]
-    y_train = y.iloc[:n_split]
-    y_test = y.iloc[n_split:]
-    return ( X_train, X_test, y_train, y_test )
 
 
 def categorical_options(feature):
@@ -90,6 +74,20 @@ def max_information_gain_split(feature, target, func=entropy):
             best_split = s
 
     return (best_info_gain, best_split, is_numerical, True)
+
+
+def data_preprocessing(data, split_threshold = .9):
+    data = data.loc[:, 'ClumpThickness':] #remove id
+    data.sample(frac=1, random_state=42).reset_index(drop=True)
+    y = data['Class'].astype('category')
+    y = y.cat.codes.astype('category')
+    X = data.iloc[:, :-1] #remove y
+    n_split = int( data.shape[0] * split_threshold ) 
+    X_train = X.iloc[:n_split]
+    X_test = X.iloc[n_split:]
+    y_train = y.iloc[:n_split]
+    y_test = y.iloc[n_split:]
+    return ( X_train, X_test, y_train, y_test )
 
 
 def main():
