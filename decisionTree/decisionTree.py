@@ -17,7 +17,7 @@ def gini_impurity(y):
 def entropy(y):
     P = y.value_counts() / y.shape[0]
     return - np.sum(P * np.log2(P + 0.00000001))
-    
+
 
 def variance(y):
     return y.var() if (len(y) != 1) else 0
@@ -26,7 +26,6 @@ def variance(y):
 def information_gain(y, mask, func = entropy):   
     no_true = sum(mask) 
     no_false = len(mask) - no_true 
-    
     perc_true = no_true / (no_true + no_false)
     perc_false = no_false / (no_true + no_false)
 
@@ -47,7 +46,6 @@ def categorical_options(y):
 
 
 def max_information_gain_split(feature, y, func=entropy):
-
     is_numerical = False if is_categorical(feature) else True
     
     if is_numerical:
@@ -56,11 +54,10 @@ def max_information_gain_split(feature, y, func=entropy):
         options = categorical_options(feature)
 
     if len(options) == 0:
-        return(None, None, None, False)
+        return (None, None, None, False)
 
     split_values = []
     info_gains = [] 
-
     best_info_gain = 0
     best_split = []
 
@@ -79,20 +76,94 @@ def max_information_gain_split(feature, y, func=entropy):
 def get_best_split(X, y):
     masks = X.apply(max_information_gain_split, y = y).T
     masks.columns = ['info_gain', 'split', 'is_numerical', 'is_usable_as_split' ]
-    # TODO 
-    if sum(masks.loc[3,:]) == 0:
+
+    if sum(masks.is_usable_as_split) == 0: # Check if we have no splits left
         return(None, None, None, None)
     else:
-        masks = masks.loc[:,masks.loc[3,:]]
+        masks = masks.loc[masks.is_usable_as_split]
+        split_index = masks.info_gain.astype('float').argmax()
+        split_value = masks.iloc[split_index, 1] 
+        info_gain = masks.iloc[split_index, 0]
+        is_numeric = masks.iloc[split_index, 2]
+        split_variable = masks.index[split_index]
+        return(split_variable, split_value, info_gain, is_numeric)
 
-        # Get the results for split with highest IG
-        split_variable = max(masks)
-        #split_valid = masks[split_variable][]
-        split_value = masks[split_variable][1] 
-        split_ig = masks[split_variable][0]
-        split_numeric = masks[split_variable][2]
 
-        return(split_variable, split_value, split_ig, split_numeric)
+def make_split(data, split_variable, split_value, is_numeric):
+    if is_numeric:
+        mask = data[split_variable] < split_value
+        left = data[mask]
+        right = data[-mask]
+    else:
+        mask = data[split_variable].isin(split_value)
+        left = data[mask]
+        right = data[-mask]
+    return(left,right)
+
+
+def prediction(y_cluster, is_numeric):
+  return y_cluster.mean() if is_numeric else y_cluster.value_counts().idxmax()
+
+
+def check_max_category(data, max_categories):
+    check_columns = data.dtypes[data.dtypes == "category"]
+    for column in check_columns:
+        var_length = len(data.loc[column].unique()) 
+        if var_length > max_categories:
+            raise ValueError('Column ' + column + ' has '+ str(var_length) + ' unique values, max = ' +  str(max_categories))
+
+
+def train_tree(
+    X, 
+    y, 
+    is_y_numeric, 
+    max_depth = None, 
+    min_samples_split = None, 
+    min_info_gain = 1e-10, 
+    iteration = 0, 
+    max_categories = 20
+):
+    if iteration == 0:
+        check_max_category(X, max_categories)
+
+    depth_cond = True if (max_depth == None or iteration < max_depth) else False
+    sample_cond = True if (min_samples_split == None or X.shape[0] > min_samples_split) else False
+
+    if depth_cond and sample_cond:
+        split_variable, split_value, info_gain, is_feature_numeric = get_best_split(X, y)
+
+        if (info_gain is not None and info_gain >= min_info_gain):
+
+            iteration += 1
+            left, right = make_split(X, split_variable, split_value, is_feature_numeric)
+            
+            # Instantiate sub-tree
+            split_type = "<=" if is_feature_numeric else "in"
+            question =  "{} {}  {}".format(split_variable, split_type, split_value)
+            # question = "\n" + counter*" " + "|->" + var + " " + split_type + " " + str(val) 
+            subtree = {question: []}
+
+            # Find answers (recursion)
+            yes_answer = train_tree(left, y.loc[left.index] , is_y_numeric, max_depth,min_samples_split, min_info_gain, iteration)
+            no_answer = train_tree(right, y.loc[right.index] , is_y_numeric, max_depth,min_samples_split, min_info_gain, iteration)
+
+            if yes_answer == no_answer:
+                subtree = yes_answer
+            else:
+                subtree[question].append(yes_answer)
+                subtree[question].append(no_answer)
+
+        # If it doesn't match IG condition, make prediction
+        else:
+            pred = prediction(y, is_y_numeric)
+            return pred
+
+    # Drop dataset if doesn't match depth or sample conditions
+    else:
+        pred = prediction(y, is_y_numeric)
+        return pred
+
+    return subtree
 
 
 
@@ -118,6 +189,11 @@ def main():
     data = pd.read_csv(data_path)
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
     get_best_split(X_test, y_test) 
+    max_depth = None
+    min_samples_split = None
+    min_information_gain  = 1e-5
+    decisiones = train_tree(X_train, y_train, False, max_depth, min_samples_split, min_information_gain)
+    decisiones
     print("PANE")
 
 
