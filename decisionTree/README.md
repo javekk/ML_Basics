@@ -13,6 +13,19 @@ $ python logisticRegression.py
 
 
 
+> decisionTreeExtLib.py
+
+Similar to the previous one, predicts breast cancer being *benign* or *malignant*. But this one is implemented using `Sklearn` . Usage:
+
+```bash
+$ python logisticRegressionExtLib.py
+```
+
+
+
+
+
+
 # Bibliography 
 
 * [ How to program a decision tree in Python from 0 - Ander Fernandez Jauregui](https://anderfernandez.com/en/blog/code-decision-tree-python-from-scratch/)
