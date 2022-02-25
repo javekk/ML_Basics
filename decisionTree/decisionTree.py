@@ -5,13 +5,13 @@ import itertools
 
 # Tree implementation
 class Node:
-    def __init__(self, split_variable, split_type, split_value, isLeaf = False, pred = None):
+    def __init__(self, split_variable, split_type, split_value, is_leaf = False, pred = None):
         self.left = None
         self.right = None
         self.split_variable = split_variable 
         self.split_type = split_type 
         self.split_value = split_value
-        self.isLeaf = isLeaf
+        self.is_leaf = is_leaf
         self.pred = pred
 
     def __eq__(self, other):
@@ -19,7 +19,7 @@ class Node:
             c1 = self.split_variable == other.split_variable
             c2 = self.split_type == other.split_type
             c3 = self.split_value == other.split_value
-            c4 = self.isLeaf == other.isLeaf  
+            c4 = self.is_leaf == other.is_leaf  
             c5 = self.pred == other.pred
             return c1 and c2 and c3 and c4 and c5       
         return NotImplemented
@@ -27,7 +27,7 @@ class Node:
 
 def printTree(node, level=0):
     if node != None:
-        if node.isLeaf:
+        if node.is_leaf:
             print(' ' * 4 * level,  '--', node.pred)
         else:
             printTree(node.left, level + 1)
@@ -133,7 +133,7 @@ def make_split(data, split_variable, split_value, is_numeric):
     return(left,right)
 
 
-def prediction(y_cluster, is_numeric):
+def leaf_output(y_cluster, is_numeric):
   return y_cluster.mean() if is_numeric else y_cluster.value_counts().idxmax()
 
 
@@ -179,16 +179,65 @@ def train_tree(
             return tree
 
         else:
-            pred = prediction(y, is_y_numeric)
+            pred = leaf_output(y, is_y_numeric)
             return Node(None, None, None, True, pred)
 
     else:
-        pred = prediction(y, is_y_numeric)
+        pred = leaf_output(y, is_y_numeric)
         return Node(None, None, None, True, pred)
 
 
-def predict(observation, tree):
-    print("yet to be implemented")
+def predict(x_i, tree):
+    if tree.is_leaf:
+        return tree.pred
+    elif tree.split_type == "<=": #is_numeric
+        if x_i[tree.split_variable] <= tree.split_value:
+            return predict(x_i, tree.left)
+        else:
+            return predict(x_i, tree.right)
+    else: 
+        if x_i[tree.split_variable] in tree.split_value:
+            return predict(x_i, tree.left)
+        else:
+            return predict(x_i, tree.right)
+
+
+def print_confusion_matrix(tp, tn, fp, fn):
+    s = f'''  
+Confusion Matrix:
+
+    _____|____actual_____
+         | {tp}      {fp}
+    pred |
+         | {fn}      {tn}
+    '''
+    print(s)
+
+
+def eval_model(y_test, y_pred):
+    str_sep = '--------\n'
+    compare = list(zip(y_test, y_pred)) # Actual vs Predicted
+    tp = sum(True for i in compare if i[0]==1 and i[1]==1) # true_positives (being malignant and pred malignant)
+    tn = sum(True for i in compare if i[0]==0 and i[1]==0) # true_negatives (being benign and pred benign)
+    fp = sum(True for i in compare if i[0]==0 and i[1]==1) # false_positives (being benign and pred malignant)
+    fn = sum(True for i in compare if i[0]==1 and i[1]==0) # false_negatives (being malignant and pred benign)
+    print(str_sep)
+    print_confusion_matrix(tp, tn, fp, fn)
+    # Accuracy
+    acc = (tp+tn) / (tp+fp+tn+fn)
+    print(str_sep, 'Accuracy:\t', acc)
+    # Precision
+    prec = tp / (tp + fp)
+    print(str_sep, 'Precision:\t', prec)
+    # Recall aka Sensitivity
+    rec = tp / (tp + fn)
+    print(str_sep, 'Recall:\t', rec)
+    # Specificity
+    spec = tn / (tn + fp)
+    print(str_sep, 'Specifity:\t', spec)
+    # F1-score
+    f1 = 2 * ( prec * rec ) / (prec + rec)
+    print(str_sep, 'F1- Score:\t', f1)
 
 
 def data_preprocessing(data, split_threshold = .9):
@@ -212,13 +261,19 @@ def main():
     # Data processing
     data = pd.read_csv(data_path)
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
-    get_best_split(X_test, y_test) 
-    max_depth = 2
+    # Hyperparameters
+    max_depth = 1
     min_samples_split = None
     min_information_gain  = 1e-5
+    # Train + pred + eval
     tree = train_tree(X_train, y_train, False, max_depth, min_samples_split, min_information_gain)
     if max_depth <= 2:
         printTree(tree)
+    predictions = []
+    for _, row in X_test.iterrows():
+        predictions.append(predict(row, tree))
+    eval = pd.DataFrame({'actual': y_test, 'pred': predictions})
+    eval_model(eval['actual'], eval['pred'])
 
 
 if __name__ == "__main__":
