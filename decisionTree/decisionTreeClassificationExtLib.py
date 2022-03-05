@@ -32,7 +32,6 @@ def main():
     # Hyperparameters
     max_depth = 1
     min_samples_split = 3
-
     # Train + pred + eval
     tree = DecisionTreeClassifier(max_depth=max_depth, min_samples_split=min_samples_split, )
     tree.fit(X_train , y_train)
