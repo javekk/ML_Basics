@@ -1,25 +1,34 @@
 # Decision Trees and Random Forests
 
+## Model
+
+> DecisionTree 
+
+Basic decision tree implementation, using `Numpy` and `Pandas`. It works both for regression and classification.
+
+> Node
+
+Binary tree implementation which is used as data structure for the deciosion tree
 
 
+## Use cases
 
-> decisionTree.py
 
-Basic decision tree implementation, using `Numpy` and `Pandas`. It works both for regression and classification. Basic usage:
+> decisionTreeClassification.py
+
+Predict breast cancer being *benign* or *malignant*, from UCi breast-cancer-wisconsin dataset. Basic usage:
 
 ```bash
-$ python logisticRegression.py
+$ python decisionTreeClassification.py
 ```
-Predicts breast cancer being *benign* or *malignant*. 
- 
 
 
-> decisionTreeExtLib.py
+> decisionTreeClassificationExtLib.py
 
-Similar to the previous one, predicts breast cancer being *benign* or *malignant*. But this one is implemented using `Sklearn` . Usage:
+Similar to the previous one, predicts breast cancer being *benign* or *malignant*. But this one is implemented using `Sklearn` implementation. Usage:
 
 ```bash
-$ python logisticRegressionExtLib.py
+$ python decisionTreeClassificationExtLib.py
 ```
 
 
