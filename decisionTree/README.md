@@ -5,12 +5,13 @@
 
 > decisionTree.py
 
-Predict breast cancer being *benign* or *malignant*. Implemented using `Numpy` and `Pandas`. Usage:
+Basic decision tree implementation, using `Numpy` and `Pandas`. It works both for regression and classification. Basic usage:
 
 ```bash
 $ python logisticRegression.py
 ```
-
+Predicts breast cancer being *benign* or *malignant*. 
+ 
 
 
 > decisionTreeExtLib.py
