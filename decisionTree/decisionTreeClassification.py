@@ -65,13 +65,13 @@ def main():
     data = pd.read_csv(data_path)
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
     # Hyperparameters
-    max_depth = 1
+    max_depth = 25
     min_samples_split = None
     min_information_gain  = 1e-5
     # Train + pred + eval
     tree = DecisionTree()
     tree.fit(X_train, y_train, False, max_depth, min_samples_split, min_information_gain)
-    if max_depth <= 2:
+    if max_depth <= 3:
         tree.model.printTree()
     predictions = []
     for _, row in X_test.iterrows():

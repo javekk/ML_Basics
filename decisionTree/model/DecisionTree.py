@@ -122,7 +122,6 @@ class DecisionTree:
         X, 
         y, 
         is_y_numeric, 
-        tree = None,
         max_depth = None, 
         min_samples_split = None, 
         min_info_gain = 1e-10, 
@@ -132,8 +131,8 @@ class DecisionTree:
         if depth == 0:
             self.check_max_category(X, max_categories)
 
-        depth_cond = True if (max_depth == None or depth < max_depth) else False
-        sample_cond = True if (min_samples_split == None or X.shape[0] > min_samples_split) else False
+        depth_cond = max_depth == None or depth < max_depth
+        sample_cond = min_samples_split == None or X.shape[0] > min_samples_split
 
         if depth_cond and sample_cond:
             split_variable, split_value, info_gain, is_feature_numeric = self.get_best_split(X, y)
@@ -143,8 +142,8 @@ class DecisionTree:
                 split_type = "<=" if is_feature_numeric else "in"
                 tree = Node(split_variable, split_type, split_value)
                 depth += 1
-                l_tree = self._train_tree(left, y.loc[left.index], is_y_numeric, tree, max_depth, min_samples_split, min_info_gain, depth)
-                r_tree = self._train_tree(right, y.loc[right.index], is_y_numeric, tree, max_depth, min_samples_split, min_info_gain, depth)
+                l_tree = self._train_tree(left, y.loc[left.index], is_y_numeric, max_depth, min_samples_split, min_info_gain, depth)
+                r_tree = self._train_tree(right, y.loc[right.index], is_y_numeric, max_depth, min_samples_split, min_info_gain, depth)
                 # if l == r:
                 #   prune()
                 tree.left = l_tree
@@ -165,14 +164,13 @@ class DecisionTree:
         X, 
         y, 
         is_y_numeric, 
-        tree = None,
         max_depth = None, 
         min_samples_split = None, 
         min_info_gain = 1e-10, 
         depth = 0, 
         max_categories = 20
     ):
-        self.model = self._train_tree(X, y, is_y_numeric, tree,max_depth, min_samples_split, min_info_gain, depth, max_categories)
+        self.model = self._train_tree(X, y, is_y_numeric, max_depth, min_samples_split, min_info_gain, depth, max_categories)
 
 
     def _predict(self, x_i, node):
