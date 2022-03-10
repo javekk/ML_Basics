@@ -43,3 +43,5 @@ $ python decisionTreeClassificationExtLib.py
 * [ StatQuest: Decision Trees - StatQuest with Josh Starmer ](https://www.youtube.com/watch?v=7VeUPuFGJHk)
 
 * [ UCI Machine Learning Repository - Breast Cancer Wisconsin (Original) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29)
+
+* [ UCI Machine Learning Repository - Auto MPG Dataset](https://archive-beta.ics.uci.edu/ml/datasets/auto+mpg)
