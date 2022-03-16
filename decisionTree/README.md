@@ -33,8 +33,22 @@ $ python decisionTreeClassificationExtLib.py
 ```
 
 
+> decisionTreeRegression.py
+
+Predict fuel consumption expressed in *mpg* based on the auto specifics using the UCI auto dataset. Basic usage:
+
+```bash
+$ python decisionTreeRegression.py
+```
 
 
+> decisionTreeRegressionExtLib.py
+
+Similar to the previous one, fuel consumption expressed in *mpg* based on the auto specifics. But this one is implemented using `Sklearn` implementation. Usage:
+
+```bash
+$ python decisionTreeRegressionExtLib.py
+```
 
 
 # Bibliography 
