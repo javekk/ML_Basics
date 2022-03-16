@@ -8,7 +8,8 @@ Basic decision tree implementation, using `Numpy` and `Pandas`. It works both fo
 
 > Node
 
-Binary tree implementation which is used as data structure for the deciosion tree
+Binary tree implementation which is used as data structure for the deciosion tree.
+
 
 
 ## Use cases
