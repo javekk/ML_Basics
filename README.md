@@ -6,5 +6,3 @@
 Repo with some basic ML algorithm implementations.
 
 Check out each sub-folder to find out more.
-
-​			
