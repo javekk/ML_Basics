@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 import sys
 
-from model.DecisionTree import DecisionTree
+from model.RandomForest import RandomForest
+
 
 
 def eval_model(y_test, y_pred, no_feature):
@@ -26,6 +27,7 @@ def eval_model(y_test, y_pred, no_feature):
 
 def data_preprocessing(data, split_threshold = .9):
     data = data.loc[:, :'origin'] #remove carname
+    data.sample(frac=1, random_state=42).reset_index(drop=True)
     y = data.mpg
     X = data.iloc[:, 1:] #remove y
     # split
@@ -46,16 +48,15 @@ def main():
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
     # Hyperparameters
     max_depth = 10
+    number_of_trees = 3
     min_samples_split = None
     min_information_gain  = 1e-5
     # Train + pred + eval
-    tree = DecisionTree(True)
-    tree.fit(X_train, y_train, max_depth, min_samples_split, min_information_gain)
-    if max_depth <= 2:
-        tree.model.printTree()
+    reg = RandomForest(True)
+    reg.fit(X_train, y_train, number_of_trees, max_depth, min_samples_split, min_information_gain)
     predictions = []
     for _, row in X_test.iterrows():
-        predictions.append(tree.predict(row))
+        predictions.append(reg.predict(row))
     eval_model(y_test, predictions, X_test.shape[1])
 
 
