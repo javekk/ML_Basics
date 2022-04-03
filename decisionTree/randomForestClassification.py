@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import sys
 
-from model.DecisionTree import DecisionTree
+from model.RandomForest import RandomForest
 
 
 def print_confusion_matrix(tp, tn, fp, fn):
@@ -66,16 +66,15 @@ def main():
     X_train, X_test, y_train, y_test  = data_preprocessing(data)
     # Hyperparameters
     max_depth = 25
+    number_of_trees = 5
     min_samples_split = None
     min_information_gain  = 1e-5
     # Train + pred + eval
-    tree = DecisionTree()
-    tree.fit(X_train, y_train, max_depth, min_samples_split, min_information_gain)
-    if max_depth <= 3:
-        tree.model.printTree()
+    clf = RandomForest()
+    clf.fit(X_train, y_train, number_of_trees, max_depth, min_samples_split, min_information_gain)
     predictions = []
     for _, row in X_test.iterrows():
-        predictions.append(tree.predict(row))
+        predictions.append(clf.predict(row))
     eval = pd.DataFrame({'actual': y_test, 'pred': predictions})
     eval_model(eval['actual'], eval['pred'])
 

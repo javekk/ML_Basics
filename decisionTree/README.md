@@ -51,6 +51,25 @@ $ python decisionTreeRegressionExtLib.py
 ```
 
 
+
+> randomForestClassification.py
+
+Predict breast cancer being *benign* or *malignant*, from UCi breast-cancer-wisconsin dataset. Basic usage:
+
+```bash
+$ python randomForestClassification.py
+```
+
+
+> randomForestRegression.py
+
+Predict fuel consumption expressed in *mpg* based on the auto specifics using the UCI auto dataset. Basic usage:
+
+```bash
+$ python randomForestRegression.py
+```
+
+
 # Bibliography 
 
 * [ How to program a decision tree in Python from 0 - Ander Fernandez Jauregui](https://anderfernandez.com/en/blog/code-decision-tree-python-from-scratch/)

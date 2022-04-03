@@ -5,8 +5,9 @@ from model.Node import Node
 
 
 class DecisionTree:
-    def __init__(self):
+    def __init__(self, is_y_numeric = False):
         self.model = Node(None, None, None)
+        self.is_y_numeric = is_y_numeric
 
 
     def is_categorical(self, d):
@@ -105,8 +106,8 @@ class DecisionTree:
         return(left,right)
 
 
-    def leaf_output(self, y_cluster, is_numeric):
-        return y_cluster.mean() if is_numeric else y_cluster.value_counts().idxmax()
+    def leaf_output(self, y_cluster):
+        return y_cluster.mean() if self.is_y_numeric else y_cluster.value_counts().idxmax()
 
 
     def check_max_category(self, data, max_categories):
@@ -121,7 +122,6 @@ class DecisionTree:
         self, 
         X, 
         y, 
-        is_y_numeric, 
         max_depth = None, 
         min_samples_split = None, 
         min_info_gain = 1e-10, 
@@ -142,8 +142,8 @@ class DecisionTree:
                 split_type = "<=" if is_feature_numeric else "in"
                 tree = Node(split_variable, split_type, split_value)
                 depth += 1
-                l_tree = self._train_tree(left, y.loc[left.index], is_y_numeric, max_depth, min_samples_split, min_info_gain, depth)
-                r_tree = self._train_tree(right, y.loc[right.index], is_y_numeric, max_depth, min_samples_split, min_info_gain, depth)
+                l_tree = self._train_tree(left, y.loc[left.index], max_depth, min_samples_split, min_info_gain, depth)
+                r_tree = self._train_tree(right, y.loc[right.index], max_depth, min_samples_split, min_info_gain, depth)
                 # if l == r:
                 #   prune()
                 tree.left = l_tree
@@ -151,11 +151,11 @@ class DecisionTree:
                 return tree
 
             else:
-                pred = self.leaf_output(y, is_y_numeric)
+                pred = self.leaf_output(y)
                 return Node(None, None, None, True, pred)
 
         else:
-            pred = self.leaf_output(y, is_y_numeric)
+            pred = self.leaf_output(y)
             return Node(None, None, None, True, pred)
 
 
@@ -163,14 +163,12 @@ class DecisionTree:
         self, 
         X, 
         y, 
-        is_y_numeric, 
         max_depth = None, 
         min_samples_split = None, 
         min_info_gain = 1e-10, 
-        depth = 0, 
         max_categories = 20
     ):
-        self.model = self._train_tree(X, y, is_y_numeric, max_depth, min_samples_split, min_info_gain, depth, max_categories)
+        self.model = self._train_tree(X, y, max_depth, min_samples_split, min_info_gain, 0, max_categories)
 
 
     def _predict(self, x_i, node):
