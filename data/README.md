@@ -8,3 +8,5 @@
 * [ UCI Machine Learning Repository - Wine Quality Data Set](https://archive.ics.uci.edu/ml/datasets/wine+quality)
 
 * [ UCI Machine Learning Repository - Auto MPG Dataset](https://archive-beta.ics.uci.edu/ml/datasets/auto+mpg)
+
+* [ UCI Machine Learning Repository - Spambase Data Set](https://archive.ics.uci.edu/ml/datasets/spambase)
