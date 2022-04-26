@@ -1,14 +1,15 @@
 # Naive Bayes Classification
 
 
-> 
+#### `multinomialNaiveBayesClassification`
+
+Basic implementation of a multinomial naive bayes classifier to detect spam SMS. The dataset is the [UCI Machine Learning Repository - SMS Spam Collection Data Set](https://archive.ics.uci.edu/ml/datasets/sms+spam+collection). To run used:
 
 ```bash
-$ python  
+$ python multinomialNaiveBayesClassification.py
 ```
 
 
+# Bibliography and References 
 
-# Bibliography 
-
-* [ UCI Machine Learning Repository - Spambase Data Set](https://archive.ics.uci.edu/ml/datasets/spambase)
+* [UCI Machine Learning Repository - SMS Spam Collection Data Set](https://archive.ics.uci.edu/ml/datasets/sms+spam+collection)
