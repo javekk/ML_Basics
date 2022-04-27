@@ -7,8 +7,7 @@ import sys
 
 def data_preprocessing(data, split_threshold=.9):
     data.sample(frac=1, random_state=42).reset_index(drop=True)
-    y = data['is_spam'].map({'spam': 1, 'ham': 0}).astype(
-        'category')  # 1 spam, 0 normal
+    y = data['is_spam'].map({'spam': 1, 'ham': 0}).astype('category')  # 1 spam, 0 normal
     X = data['sms']
     n_split = int(data.shape[0] * split_threshold)
     X_train = X.iloc[:n_split]
@@ -81,10 +80,10 @@ def plot_decision_boundary(y_pred_prob, y_test):
     is_spam_list = (y_test == 1) # array with True or False, True = is spam
     not_spam_probs = y_pred_prob[is_not_spam_list] 
     one_less_is_spam_prob = 1 - y_pred_prob[is_spam_list]
-    not_spam_idx = [i for i in range(len(is_spam_list)) if is_spam_list[i]] # array with only indeces for not spam 
-    is_spam_idx = [i for i in range(len(is_not_spam_list)) if is_not_spam_list[i]] # array with only indeces for spam 
-    ax.scatter(not_spam_idx, one_less_is_spam_prob, s=5, c='r', marker="x", label='spam')
-    ax.scatter(is_spam_idx, not_spam_probs, s=5, c='b', marker="o", label='normal')
+    is_spam_idx = [i for i in range(len(is_spam_list)) if is_spam_list[i]] # array with only indeces for not spam 
+    not_spam_idx = [i for i in range(len(is_not_spam_list)) if is_not_spam_list[i]] # array with only indeces for spam 
+    ax.scatter(is_spam_idx, one_less_is_spam_prob, s=5, c='r', marker="x", label='spam')
+    ax.scatter(not_spam_idx, not_spam_probs, s=5, c='b', marker="o", label='normal')
     plt.legend(loc='center right');
     ax.set_title("Predicitions")
     ax.set_xlabel('m')

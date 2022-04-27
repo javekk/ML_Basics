@@ -13,3 +13,5 @@ $ python multinomialNaiveBayesClassification.py
 # Bibliography and References 
 
 * [UCI Machine Learning Repository - SMS Spam Collection Data Set](https://archive.ics.uci.edu/ml/datasets/sms+spam+collection)
+
+* [Writing Multinomial Naive Bayes From Scratch - Jon Nguyen's Portfolio ](https://jonndata.github.io/2020-07-30-Naive-Bayes-From-Scratch/)
